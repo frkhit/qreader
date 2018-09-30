@@ -23,12 +23,9 @@ def read(image_or_path):
         image_or_path = PIL.Image.open(image_or_path)
     if isinstance(image_or_path, PIL.Image.Image):
         data = ImageScanner(image_or_path)
-        return QRDecoder(data).get_first()
-        # result = QRDecoder(data).get_all()
-        # if len(result) == 0:
-        #     return None
-        # elif len(result) == 1:
-        #     return result[0]
-        # else:
-        #     return result
+        result = QRDecoder(data).get_all()
+        if len(result) == 0:
+            return None
+        else:
+            return "".join(result)
     raise TypeError('parameter should be a PIL image object, a file-like object, or a path to an image file')

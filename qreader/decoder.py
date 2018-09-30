@@ -12,19 +12,32 @@ class QRDecoder(object):
 
     def __init__(self, scanner):
         self.scanner = scanner
+        self._result_list = None
 
     @property
     def version(self):
         return self.scanner.info.version
 
     def get_first(self):
-        return self._decode_next_message()
+        self._decode_all_message()
 
-    def __iter__(self):
-        yield self._decode_next_message()
+        return self._result_list[0]
 
     def get_all(self):
-        return list(self)
+        self._decode_all_message()
+
+        return list(self._result_list)
+
+    def _decode_all_message(self):
+        if self._result_list is None:
+            self._result_list = []
+
+            while True:
+                try:
+                    self._result_list.append(self._decode_next_message())
+                except Exception as e:
+                    print(e)
+                    break
 
     def _decode_next_message(self):
         mode = self.scanner.read_int(4)
